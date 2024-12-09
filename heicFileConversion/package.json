@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "heic-convert": "^1.2.4",
+    "readdir": "^1.0.2"
+  }
+}
