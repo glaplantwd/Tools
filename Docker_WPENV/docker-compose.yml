@@ -1,0 +1,46 @@
+services:
+  mysql-db:
+    build:
+      context: ./db
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: wplocal-db
+      MYSQL_USER: wplocal-admin
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: rootpassword
+
+  wordpress:
+    build:
+      context: ./wordpress
+    depends_on:
+      - mysql-db
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      WORDPRESS_DB_NAME: wplocal-db
+      WORDPRESS_DB_USER: wplocal-admin
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_DB_HOST: mysql-db
+    volumes:
+      - ./wordpress:/var/www/html
+
+  phpmyadmin:
+    image: phpmyadmin:5.2.1
+    depends_on:
+      - mysql-db
+    restart: always
+    ports:
+      - 8081:80
+    environment:
+      PMA_HOST: mysql-db
+      PMA_USER: wplocal-admin
+      PMA_PASSWORD: password
+
+volumes:
+  db:
+  wordpress:
